@@ -1,0 +1,14 @@
+artifact_uri: file:c:/Users/Administrator/Desktop/digitization-pid/notebooks/model/runs/mlflow/220740345223810999/6d101e534b304b5ab9ddd1b9b41c9f65/artifacts
+end_time: 1760791690376
+entry_point_name: ''
+experiment_id: '220740345223810999'
+lifecycle_stage: active
+run_id: 6d101e534b304b5ab9ddd1b9b41c9f65
+run_name: detection_model
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1760790225629
+status: 3
+tags: []
+user_id: Administrator

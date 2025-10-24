@@ -1,0 +1,16 @@
+{
+  "pressure_thresholds": {
+    "S15002": {
+      "min": 101.0,
+      "max": 104.0,
+      "units": "psi",
+      "description": "Normal operating range for pressure indicator P15002"
+    },
+    "S15006": {
+      "min": 101.0,
+      "max": 104.0,
+      "units": "psi",
+      "description": "Normal operating range for pressure indicator P15006"
+    }
+  }
+}

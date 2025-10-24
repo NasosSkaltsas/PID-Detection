@@ -55,7 +55,7 @@ def merge_axis_aligned_lines(segments, axis_tol=6, overlap_tol=6):
             cur_a, cur_b = mem[0][a_idx], mem[0][b_idx]
             for t in mem[1:]:
                 a, b = t[a_idx], t[b_idx]
-                if a <= cur_b + overlap_tol:  # overlap or small gap -> extend
+                if a <= cur_b + overlap_tol: 
                     cur_b = max(cur_b, b)
                 else:
                     merged.append((int(round(g["key_mean"])), cur_a, cur_b))
@@ -65,9 +65,9 @@ def merge_axis_aligned_lines(segments, axis_tol=6, overlap_tol=6):
 
     # Merge within each orientation
     merged_h = cluster_and_merge([(y, x1, x2) for (x1, y, x2) in horizontals],
-                                 key_idx=0, a_idx=1, b_idx=2)  # returns (y, x1, x2)
+                                 key_idx=0, a_idx=1, b_idx=2)  
     merged_v = cluster_and_merge([(x, y1, y2) for (x, y1, y2) in verticals],
-                                 key_idx=0, a_idx=1, b_idx=2)  # returns (x, y1, y2)
+                                 key_idx=0, a_idx=1, b_idx=2) 
 
     # Convert back to (x1,y1,x2,y2)
     merged_segments = []
@@ -131,20 +131,20 @@ def detect_lines_hough(
     """
 
 
-    # === Convert to grayscale ===
+    # Convert to grayscale
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-    # === Create binary mask for line-like pixels ===
+    #Create binary mask for line-like pixels 
     _, mask = cv2.threshold(gray, threshold_value, 255, cv2.THRESH_BINARY_INV)
 
-    # === Morphological closing to bridge gaps ===
+    #Morphological closing to bridge gaps 
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3, 3))
     mask_clean = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, kernel, iterations=2)
 
-    # === Edge detection ===
+    #  Edge detection 
     edges = cv2.Canny(mask_clean, canny_thresh1, canny_thresh2)
 
-    # === Probabilistic Hough Transform ===
+    # Probabilistic Hough Transform 
     lines = cv2.HoughLinesP(
         edges,
         rho=1,
@@ -154,13 +154,13 @@ def detect_lines_hough(
         maxLineGap=max_line_gap,
     )
 
-    # --- Helper: axis-aligned test ---
+    # axis-aligned  
     def is_axis_aligned(x1, y1, x2, y2, tol_deg=axis_tolerance_deg):
         dx, dy = x2 - x1, y2 - y1
         angle = (np.degrees(np.arctan2(dy, dx)) + 180) % 180
         return min(abs(angle - 0), abs(angle - 180)) < tol_deg or abs(angle - 90) < tol_deg
 
-    # === Collect and draw accepted lines ===
+    # Collect and draw accepted lines 
     vis = img.copy()
     accepted = []
     line_data = []
@@ -175,7 +175,7 @@ def detect_lines_hough(
                 cv2.line(vis, (x1, y1), (x2, y2), (0, 0, 255), 2)
                 line_data.append([i, x1, y1, x2, y2, round(angle, 2), round(length, 2)])
 
-    # === Optional merging ===
+    #  Optional merging 
     if run_merge:
         try:
             merged_segments = merge_axis_aligned_lines(accepted, axis_tol=axis_tolerance_deg, overlap_tol=0)
@@ -199,7 +199,7 @@ def detect_lines_hough(
         except NameError:
             raise NameError("merge_axis_aligned_lines() is not defined yet.")
 
-    # === Default: return non-merged detected lines ===
+    # return non-merged detected lines
     df = pd.DataFrame(line_data, columns=["ID", "x1", "y1", "x2", "y2", "Angle (deg)", "Length (px)"])
 
     df.to_csv(artifacts_path+"\\"+"hough_lines.csv", index=False)

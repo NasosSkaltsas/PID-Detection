@@ -31,28 +31,27 @@ def create_delaunay_graph(
         Graph with nodes (x, y) and weighted edges (Euclidean distances).
     """
     df_nodes= pd.read_csv((artifacts_path+"/"+"nodes.csv"))
-    # 1️⃣ Filter nodes by pipeline and prepare a compact df
+    #  Filter nodes by pipeline
     df1 = df_nodes[df_nodes["Pipeline"] == pipeline_id][["ID", "x", "y","Component"]].copy()
 
     # Reset index to create a unique numeric index for Delaunay
     df2 = df1.reset_index(drop=True).reset_index()
     
-    # Compute mean position per ID (if multiple rows per ID)
+    # Compute mean position per ID 
     df = df2.groupby(["ID","Component"], as_index=False)[["x", "y"]].mean()
 
-    # Save as JSON (records = list of dicts)
+    # Save as JSON 
     extract_df = df[["ID", "Component"]].rename(columns={"ID": "label"}).reset_index()
     extract_df.to_json(artifacts_path +"/" +"nodes_mapping.json", orient="records", indent=4)
     
-    # Assign a continuous index column for triangulation
     df["index"] = df.index
 
-    # 2️⃣ Delaunay triangulation
+    # Delaunay triangulation
     pts = df[["x", "y"]].to_numpy()
     ids = df["index"].to_numpy()
     tri = Delaunay(pts)
 
-    # 3️⃣ Build graph from triangles
+    # Build graph from triangles
     G = nx.Graph()
     for _, row in df.iterrows():
         G.add_node(int(row["index"]), x=float(row["x"]), y=float(row["y"]))
@@ -70,11 +69,11 @@ def create_delaunay_graph(
 
 def draw_graph_on_image(
     G: nx.Graph,
-    background: Optional[Union[str, np.ndarray]] = None,  # path or image array
-    image_size: Tuple[int, int] = (1000, 1000),          # used only if no background
-    bg_color: Tuple[int, int, int] = (255, 255, 255),    # BGR
-    node_color: Tuple[int, int, int] = (0, 150, 255),    # BGR
-    edge_color: Tuple[int, int, int] = (0, 0, 0),        # BGR
+    background: Optional[Union[str, np.ndarray]] = None,  
+    image_size: Tuple[int, int] = (1000, 1000),        
+    bg_color: Tuple[int, int, int] = (255, 255, 255),   
+    node_color: Tuple[int, int, int] = (0, 150, 255),  
+    edge_color: Tuple[int, int, int] = (0, 0, 0),        
     node_radius: int = 4,
     edge_thickness: int = 1,
     show_labels: bool = False

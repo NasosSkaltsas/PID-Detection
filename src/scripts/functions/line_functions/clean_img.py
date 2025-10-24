@@ -196,8 +196,8 @@ def thicken_edges(
 
     Parameters
     ----------
-    img_path : str
-        Path to the input image file.
+    img_path : np.darray
+        Image 
     save_dir : str, optional
         Directory where the result will be saved. Default is 'artifacts/line_detection'.
     edge_method : str, optional

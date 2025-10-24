@@ -22,12 +22,10 @@ def detect_objects(image_path, model, detections_dir, imgsz=640, conf=0.2, verbo
     detections_dir = Path(detections_dir)
     detections_dir.mkdir(parents=True, exist_ok=True)
 
-    # Read image
     img = cv2.imread(str(image_path))
     if img is None:
         raise FileNotFoundError(f"Image not found: {image_path}")
 
-    # Run model prediction
     results = model.predict(source=img, imgsz=imgsz, conf=conf, verbose=verbose)[0]
     
     rows = []
@@ -48,7 +46,6 @@ def detect_objects(image_path, model, detections_dir, imgsz=640, conf=0.2, verbo
 
     df_det = pd.DataFrame(rows)
 
-    # Draw boxes and labels
     annot = img.copy()
     for r in rows:
         x1, y1, x2, y2 = map(int, [r['x1'], r['y1'], r['x2'], r['y2']])
@@ -57,10 +54,8 @@ def detect_objects(image_path, model, detections_dir, imgsz=640, conf=0.2, verbo
                     (x1, max(0, y1 - 5)),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1, cv2.LINE_AA)
 
-    # Base filename
     base = os.path.basename(image_path).rsplit('.', 1)[0]
 
-    # Save outputs
     annotated_path = detections_dir / f"{base}_annotated.png"
     csv_path = detections_dir / f"{base}_detections.csv"
 

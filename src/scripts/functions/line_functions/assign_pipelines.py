@@ -35,8 +35,6 @@ def assign_pipelines(
     image_path = Path(image_path)
     det_dir = Path(detections_path)
 
-    # df_lines = pd.read_csv(artifacts_path+"/"+"hough_lines.csv")
-    # Build the CSV path based on the image base name
     base = image_path.stem
     detections_csv_path = det_dir / f"{base}_detections.csv"
     df_detections = pd.read_csv(detections_csv_path)
@@ -56,10 +54,7 @@ def assign_pipelines(
 
     df=pd.concat([df_points,df_components_nodes]).reset_index()
 
-    # ------------------------
     # Validate input
-    # -----------------------
-    # 
     required = {"ID", "x", "y"}
     if not required.issubset(df.columns):
         raise ValueError(f"DataFrame must contain columns {required}")
@@ -71,14 +66,11 @@ def assign_pipelines(
     ids = out["ID"].to_numpy()
     index_arr = out.index.to_numpy()
 
-    # Precompute pairwise distances
     diff = coords[:, None, :] - coords[None, :, :]
     dists = np.sqrt((diff ** 2).sum(axis=2))
     np.fill_diagonal(dists, np.inf)
 
-    # ------------------------
     # Helper functions
-    # ------------------------
     def seed_of(unassigned: Set[int]) -> int:
         return min(unassigned, key=lambda k: (out.at[k, "x"], out.at[k, "y"]))
 
@@ -107,9 +99,7 @@ def assign_pipelines(
         row_i = out.index.get_loc(i)
         return min(js, key=lambda j: dists[row_i, out.index.get_loc(j)])
 
-    # ------------------------
     # MAIN Pipeline
-    # ------------------------
     unassigned: Set[int] = set(out.index.tolist())
     Pipeline_id = 0
 
@@ -122,7 +112,7 @@ def assign_pipelines(
         out.at[start, "Pipeline"] = Pipeline_id
         unassigned.remove(start)
 
-        # Bring in same-ID of seed
+        # Bring in same-ID
         seed_sid = same_id_unassigned(start, unassigned)
         for j in seed_sid:
             out.at[j, "Pipeline"] = Pipeline_id
@@ -161,7 +151,7 @@ def assign_pipelines(
                     if block_rejects:
                         blocked.update(nbrs)
             else:
-                # >=4 → add all that share one coordinate
+                # >=4 add all that share one coordinate
                 share = share_coord(i, nbrs)
                 chosen = share
                 if block_rejects:
@@ -231,16 +221,14 @@ def draw_pipelines(df_lines,
     """
     image_path=Path(image_path)
     df_pipelines = df_lines.merge(out, on='ID', how='left')[["ID","x1","y1","x2","y2","Pipeline"]].drop_duplicates()
-    # --- Load image ---
+
     img = cv2.imread(image_path)
     if img is None:
         raise FileNotFoundError(f"Image not found at {image_path}")
     
-    # --- Define color map for pipelines ---
     unique_pipelines = df_pipelines['Pipeline'].unique()
-    colors = plt.cm.get_cmap('tab10', len(unique_pipelines) + 2)  # distinct colors
+    colors = plt.cm.get_cmap('tab10', len(unique_pipelines) + 2) 
 
-    # --- Draw each line ---
     for _, row in df_pipelines.iterrows():
         pipeline_id = row['Pipeline']
         color_idx = np.where(unique_pipelines == pipeline_id)[0][0]
@@ -249,6 +237,5 @@ def draw_pipelines(df_lines,
         pt2 = (int(row['x2']), int(row['y2']))
         cv2.line(img, pt1, pt2, color, thickness=3)
     
-    # --- Save the result ---
     cv2.imwrite(artifacts_path+"/"+"detected_pipeline.png", img)
 

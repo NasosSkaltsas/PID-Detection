@@ -17,9 +17,8 @@ def prune_overlapping_edges(G, axis_tol=1e-6, overlap_tol=1e-9, len_tol=1e-9):
     either overlap or fully contain smaller edges. For any overlapping pair,
     the longer edge is removed (if equal, drop one deterministically).
     """
-    # Collect horizontal and vertical edges with their projections
-    horiz = []  # (u,v,y, x0,x1, length)
-    vert  = []  # (u,v,x, y0,y1, length)
+    horiz = []  
+    vert  = []  
 
     for u, v, d in G.edges(data=True):
         x1, y1 = G.nodes[u]['x'], G.nodes[u]['y']
@@ -39,8 +38,6 @@ def prune_overlapping_edges(G, axis_tol=1e-6, overlap_tol=1e-9, len_tol=1e-9):
     to_remove = set()
 
     def sweep(items, axis='h'):
-        # Pairwise compare edges that lie on (approximately) the same line
-        # For horizontals: match by y within axis_tol; for verticals: by x within axis_tol.
         n = len(items)
         for i in range(n):
             ui, vi, line_i, a0i, a1i, Li = items[i]
@@ -122,7 +119,7 @@ def prune_nodes_with_multi_edges(G, angle_tol_deg=5.0, len_tol=1e-9):
     tol = math.radians(angle_tol_deg)
 
     def _is_near_horizontal(theta):
-        # near 0 or π (±π) within tolerance
+        # near 0 or 180 within tolerance
         return min(abs(theta), abs(abs(theta) - math.pi)) <= tol
 
     def _pick_best(group):

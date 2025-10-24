@@ -15,10 +15,8 @@ def load_config(env_path: str | None = None) -> dict:
         dict: A dictionary containing resolved Path objects for 
               base, outputs, detections, and image.
     """
-    # --- Load environment file ---
     load_dotenv(dotenv_path=env_path)
 
-    # --- Resolve base paths ---
     base_dir = Path(os.getenv("BASE_DIR", ".")).resolve()
 
     outputs_dir = Path(
@@ -41,15 +39,12 @@ def load_config(env_path: str | None = None) -> dict:
         os.getenv("ARTIFACTS_PATH")
     ).resolve()
 
-    # --- Add module root to sys.path if needed ---
     modules_root = Path(os.getenv("MODULES_ROOT", "..")).resolve()
     if str(modules_root) not in sys.path:
         sys.path.append(str(modules_root))
 
-    # --- Ensure output directories exist ---
     detections_dir.mkdir(parents=True, exist_ok=True)
 
-    # --- Return everything neatly ---
     return {
         "BASE_DIR": base_dir,
         "OUTPUTS_DIR": outputs_dir,

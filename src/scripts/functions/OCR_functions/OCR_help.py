@@ -262,7 +262,7 @@ def run_component_ocr(df_csv_path, image_path):
     det_dir = Path(df_csv_path)
 
     base = image_path.stem
-    detections_csv_path = det_dir / f"{base}_detections.csv"
+    detections_csv_path = det_dir / f"{base}-detections.csv"
 
     df_det = pd.read_csv(detections_csv_path)
     img = cv2.imread(str(image_path))
@@ -293,7 +293,7 @@ def run_component_ocr(df_csv_path, image_path):
 
         # Store results
         r["name_ocr"] = text
-        r["ocr_conf"] = conf
+        # r["ocr_conf"] = conf
         r["text_bbox"] = bbox 
 
     #  Build new DataFrame 
@@ -304,10 +304,10 @@ def run_component_ocr(df_csv_path, image_path):
 
     #  Save updated detections 
     base = image_path.stem
-    save_path = det_dir / f"{base}_detections.csv"
+    save_path = det_dir / f"{base}-detections.csv"
 
     first_char(df_det).to_csv(save_path, index=False)
 
-    print(f"✅ OCR-enhanced detections saved to: {save_path}")
+    print(f"OCR-enhanced detections saved to: {save_path}")
 
     return df_det

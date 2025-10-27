@@ -57,7 +57,7 @@ def detect_objects(image_path, model, detections_dir, imgsz=640, conf=0.2, verbo
     base = os.path.basename(image_path).rsplit('.', 1)[0]
 
     annotated_path = detections_dir / f"{base}_annotated.png"
-    csv_path = detections_dir / f"{base}_detections.csv"
+    csv_path = detections_dir / f"{base}-detections.csv"
 
     cv2.imwrite(str(annotated_path), annot)
     df_det.to_csv(csv_path, index=False)

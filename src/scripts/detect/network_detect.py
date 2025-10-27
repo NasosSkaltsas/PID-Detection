@@ -1,8 +1,8 @@
 import sys
 sys.path.append('..')
-from functions.network_functions.filter_edges import prune_long_diagonals,prune_overlapping_edges,prune_nodes_with_multi_edges
-from functions.network_functions.create_network import create_delaunay_graph,draw_graph_on_image
-from functions.global_functions.config_load import load_config
+from scripts.functions.network_functions.filter_edges import prune_long_diagonals,prune_overlapping_edges,prune_nodes_with_multi_edges
+from scripts.functions.network_functions.create_network import create_delaunay_graph,draw_graph_on_image
+from scripts.functions.global_functions.config_load import load_config
 
 if __name__ == "__main__":
     

@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from scipy.spatial import Delaunay
 from typing import Optional, Tuple, Union
 
-from functions.global_functions.config_load import load_config
+from scripts.functions.global_functions.config_load import load_config
 cfg = load_config()
 artifacts_path = str(cfg['ARTIFACTS_PATH'])
 

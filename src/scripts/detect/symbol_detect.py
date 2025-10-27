@@ -1,7 +1,7 @@
 import sys
 sys.path.append('..')
-from functions.global_functions.config_load import load_config
-from functions.yolo_functions.detect_objects import detect_objects
+from scripts.functions.global_functions.config_load import load_config
+from scripts.functions.yolo_functions.detect_objects import detect_objects
 from ultralytics import YOLO
 
 if __name__ == "__main__":

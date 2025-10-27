@@ -1,0 +1,20 @@
+name: pid-identification-deployment
+
+deployments:
+  - name: pid-identification
+    entrypoint: "scripts/detect/flow.py:main_flow"
+
+    # Choose an existing work pool name from your Prefect UI
+    work_pool:
+      name: agent01
+      work_queue_name: null
+      job_variables:
+        env:
+          # Optional overrides; if omitted, code uses repo root
+          BASE_DIR: "../.."
+          OUTPUTS_DIR: "digitization-pid/app"
+          DETECTIONS_DIR: "digitization-pid/app/detections"
+          ARTIFACTS_PATH: "digitization-pid/app/artifacts"
+          IMAGE_PATH: "digitization-pid/src/data/test/images/test2.png"
+          MODEL_PATH: "digitization-pid/src/scripts/detect/models/object_detection/bestdetection_model.pt"
+          MODULES_ROOT: ".."

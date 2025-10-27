@@ -5,7 +5,7 @@ import pandas as pd
 import ast
 from pathlib import Path
 from PIL import Image
-from functions.global_functions.config_load import load_config
+from scripts.functions.global_functions.config_load import load_config
 cfg = load_config()
 artifacts_path = str(cfg['ARTIFACTS_PATH'])
 

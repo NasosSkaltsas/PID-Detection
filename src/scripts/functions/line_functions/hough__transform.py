@@ -1,7 +1,7 @@
 
 import numpy as np
 import pandas as pd
-from functions.global_functions.config_load import load_config
+from scripts.functions.global_functions.config_load import load_config
 cfg = load_config()
 artifacts_path = str(cfg['ARTIFACTS_PATH'])
 

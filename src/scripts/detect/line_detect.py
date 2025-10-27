@@ -1,9 +1,9 @@
 import sys
 sys.path.append('..')
-from functions.line_functions.clean_img import process_image_cleaning,thicken_edges
-from functions.global_functions.config_load import load_config
-from functions.line_functions.hough__transform import detect_lines_hough
-from functions.line_functions.assign_pipelines import assign_pipelines,draw_pipelines
+from scripts.functions.line_functions.clean_img import process_image_cleaning,thicken_edges
+from scripts.functions.global_functions.config_load import load_config
+from scripts.functions.line_functions.hough__transform import detect_lines_hough
+from scripts.functions.line_functions.assign_pipelines import assign_pipelines,draw_pipelines
 
 if __name__ == "__main__":
     cfg = load_config()

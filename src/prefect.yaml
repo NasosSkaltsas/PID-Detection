@@ -2,7 +2,7 @@ name: pid-identification-deployment
 
 deployments:
   - name: pid-identification
-    entrypoint: "src/scripts/detect/flow.py:main_flow"
+    entrypoint: "scripts/detect/flow.py:main_flow"
 
     # Choose an existing work pool name from your Prefect UI
     work_pool:

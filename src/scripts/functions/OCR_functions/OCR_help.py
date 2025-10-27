@@ -276,7 +276,6 @@ def run_component_ocr(df_csv_path, image_path):
         if r.get("label") == "pump":
             # Skip OCR for pumps
             r["name_ocr"] = "pump"
-            r["ocr_conf"] = -1.0
             r["text_bbox"] = None
             continue
 
@@ -293,7 +292,6 @@ def run_component_ocr(df_csv_path, image_path):
 
         # Store results
         r["name_ocr"] = text
-        # r["ocr_conf"] = conf
         r["text_bbox"] = bbox 
 
     #  Build new DataFrame 

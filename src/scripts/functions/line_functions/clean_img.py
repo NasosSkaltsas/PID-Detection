@@ -135,7 +135,7 @@ def process_image_cleaning(
 
     # Build the CSV path based on the image base name
     base = image_path.stem
-    detections_csv_path = det_dir / f"{base}_detections.csv"
+    detections_csv_path = det_dir / f"{base}-detections.csv"
     img = cv2.imread(image_path)
     df = pd.read_csv(detections_csv_path)
 

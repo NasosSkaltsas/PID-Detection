@@ -36,7 +36,7 @@ def assign_pipelines(
     det_dir = Path(detections_path)
 
     base = image_path.stem
-    detections_csv_path = det_dir / f"{base}_detections.csv"
+    detections_csv_path = det_dir / f"{base}-detections.csv"
     df_detections = pd.read_csv(detections_csv_path)
     df_components_nodes = df_detections[['name_ocr','cx','cy','label']]
     df_components_nodes = df_components_nodes.rename(columns={'name_ocr': 'ID', 'cx': 'x', 'cy': 'y','label':'Component'})

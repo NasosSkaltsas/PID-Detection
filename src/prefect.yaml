@@ -1,10 +1,8 @@
 name: pid-identification-deployment
-
 pull:
   - prefect.deployments.steps.git_clone:
       repository: "https://github.com/NasosSkaltsas/PID-Detection.git"
-      branch: master
-
+      branch: main
 deployments:
   - name: pid-identification
     entrypoint: "src/scripts/detect/flow.py:main_flow"
@@ -16,7 +14,7 @@ deployments:
       job_variables:
         env:
           # Optional overrides; if omitted, code uses repo root
-          BASE_DIR: ".."
+          BASE_DIR: "../.."
           OUTPUTS_DIR: "digitization-pid/app"
           DETECTIONS_DIR: "digitization-pid/app/detections"
           ARTIFACTS_PATH: "digitization-pid/app/artifacts"

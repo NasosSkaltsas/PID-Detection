@@ -1,8 +1,5 @@
 name: pid-identification-deployment
-pull:
-  - prefect.deployments.steps.git_clone:
-      repository: "https://github.com/NasosSkaltsas/PID-Detection.git"
-      branch: main
+
 deployments:
   - name: pid-identification
     entrypoint: "src/scripts/detect/flow.py:main_flow"

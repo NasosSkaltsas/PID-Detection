@@ -1,0 +1,14 @@
+{
+  "anomalies": [
+    {
+      "component": "S15006",
+      "observed_value": 498.7,
+      "timestamp": "2025-10-15T10:13:00Z",
+      "expected_range": {
+        "min": 101.0,
+        "max": 104.0,
+        "units": "psi"
+      }
+    }
+  ]
+}

@@ -2,10 +2,10 @@ import cv2
 import numpy as np
 import pandas as pd
 import networkx as nx
-import matplotlib.pyplot as plt
 from scipy.spatial import Delaunay
 from typing import Optional, Tuple, Union
-
+import json
+import os
 from scripts.functions.global_functions.config_load import load_config
 cfg = load_config()
 artifacts_path = str(cfg['ARTIFACTS_PATH'])
@@ -67,6 +67,9 @@ def create_delaunay_graph(
     return G
 
 
+import json
+import os
+
 def draw_graph_on_image(
     G: nx.Graph,
     background: Optional[Union[str, np.ndarray]] = None,  
@@ -76,18 +79,24 @@ def draw_graph_on_image(
     edge_color: Tuple[int, int, int] = (0, 0, 0),        
     node_radius: int = 4,
     edge_thickness: int = 1,
-    show_labels: bool = False
+    show_labels: bool = True,
+    mapping_filename: str = "nodes_mapping.json"
 ):
     """
-    Draw a NetworkX graph onto an image. Assumes node (x,y) are pixel coords.
-
-    Parameters
-    ----------
-    G : Graph with node attrs 'x','y' (pixels).
-    background : filepath or np.ndarray (HxWx3 or HxW). If None, make blank.
-    image_size : (H,W) for blank canvas.
-    Returns image (BGR uint8).
+    Draw a NetworkX graph onto an image, with labels using the "{Component}-{label}" mapping.
     """
+    # Load mapping if we want labels
+    idx_to_name = {}
+    if show_labels and artifacts_path is not None:
+        mapping_path = os.path.join(artifacts_path, mapping_filename)
+        if os.path.exists(mapping_path):
+            with open(mapping_path, "r", encoding="utf-8") as f:
+                mapping = json.load(f)
+            idx_to_name = {
+                int(rec["index"]): f'{rec["label"]}'
+                for rec in mapping
+            }
+
     # Get base image
     if isinstance(background, str):
         img = cv2.imread(background, cv2.IMREAD_COLOR)
@@ -107,15 +116,57 @@ def draw_graph_on_image(
         x2, y2 = int(G.nodes[v]['x']), int(G.nodes[v]['y'])
         cv2.line(img, (x1, y1), (x2, y2), edge_color, edge_thickness, lineType=cv2.LINE_AA)
 
-    # Draw nodes (and optional labels)
+    # Draw nodes + labels
     for n, d in G.nodes(data=True):
         x, y = int(d['x']), int(d['y'])
         cv2.circle(img, (x, y), node_radius, node_color, -1, lineType=cv2.LINE_AA)
+
         if show_labels:
-            cv2.putText(img, str(n), (x + 5, y - 5),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.75, (0, 0, 0), 1, cv2.LINE_AA)
+            label = idx_to_name.get(int(n), str(n))
+            cv2.putText(
+                img,
+                label,
+                (x + 5, y - 5),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.5,
+                (0, 0, 0),
+                1,
+                cv2.LINE_AA
+            )
 
     savepth = artifacts_path + "\\"+"detected_network.png"
-    cv2.imwrite(savepth,img)
+    cv2.imwrite(savepth, img)
+    return img
 
-    return 
+def save_edges_as_json(G: nx.Graph, artifacts_path: str,
+                       mapping_filename: str = "nodes_mapping.json",
+                       out_filename: str = "network_edges.json") -> str:
+    """
+    Save graph edges to JSON with node indices replaced by "{label}+{Component}"
+    using the mapping in nodes_mapping.json.
+    """
+    mapping_path = os.path.join(artifacts_path, mapping_filename)
+    out_path = os.path.join(artifacts_path, out_filename)
+
+    with open(mapping_path, "r", encoding="utf-8") as f:
+        mapping = json.load(f)
+
+    # Build index -> "label+component" lookup
+    idx_to_name = {
+        int(rec["index"]): f'{rec["Component"]}-{rec["label"]}'
+        for rec in mapping
+    }
+
+    edges = []
+    for u, v, d in G.edges(data=True):
+        src = idx_to_name.get(int(u), str(u))
+        dst = idx_to_name.get(int(v), str(v))
+        edges.append({
+            "source": src,
+            "target": dst
+        })
+
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(edges, f, ensure_ascii=False, indent=4)
+
+    return out_path

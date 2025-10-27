@@ -7,6 +7,8 @@ import base64
 from prefect import flow, task, get_run_logger
 from prefect.artifacts import create_markdown_artifact,create_table_artifact
 import csv
+import json
+import pandas as pd
 
 import mimetypes
 
@@ -161,5 +163,15 @@ def main_flow():
     markdown = f"### Detected Network\n\n![detected network](data:image/png;base64,{encoded})"
     create_markdown_artifact(key="network-detection", markdown=markdown)
 
+    edges_path = artifacts_dir + "/" + "network_edges.json"
+
+    with open(edges_path, "r", encoding="utf-8") as f:
+        rows = json.load(f) 
+
+    create_table_artifact(
+        key="network-edges",
+        table=rows,
+        description=f"P&ID Detected Network",
+)
 if __name__ == "__main__":
     main_flow()

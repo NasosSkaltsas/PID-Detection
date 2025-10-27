@@ -1,0 +1,82 @@
+[
+    {
+        "source": "pipe-0",
+        "target": "valve-V15029"
+    },
+    {
+        "source": "pipe-1",
+        "target": "pipe-2"
+    },
+    {
+        "source": "pipe-1",
+        "target": "valve-V15029"
+    },
+    {
+        "source": "pipe-1",
+        "target": "pipe-7"
+    },
+    {
+        "source": "pipe-10",
+        "target": "compensator-A15010"
+    },
+    {
+        "source": "pipe-10",
+        "target": "pipe-11"
+    },
+    {
+        "source": "pipe-10",
+        "target": "pipe-6"
+    },
+    {
+        "source": "pipe-11",
+        "target": "valve_oneway-V15002"
+    },
+    {
+        "source": "pipe-11",
+        "target": "pipe-6"
+    },
+    {
+        "source": "pipe-2",
+        "target": "pipe-7"
+    },
+    {
+        "source": "pipe-2",
+        "target": "valve-V15028"
+    },
+    {
+        "source": "pipe-3",
+        "target": "valve-V15028"
+    },
+    {
+        "source": "pipe-3",
+        "target": "pipe-8"
+    },
+    {
+        "source": "pipe-6",
+        "target": "pressure_indicator-S15002"
+    },
+    {
+        "source": "pipe-7",
+        "target": "pressure_indicator-S15006"
+    },
+    {
+        "source": "pipe-8",
+        "target": "pipe-9"
+    },
+    {
+        "source": "pipe-9",
+        "target": "valve-V15027"
+    },
+    {
+        "source": "compensator-A15010",
+        "target": "pump-pump"
+    },
+    {
+        "source": "compensator-A15011",
+        "target": "pump-pump"
+    },
+    {
+        "source": "compensator-A15011",
+        "target": "valve-V15027"
+    }
+]
